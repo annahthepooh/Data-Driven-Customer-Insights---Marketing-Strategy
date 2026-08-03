@@ -1,0 +1,22 @@
+# Data files (Prevents pushing huge CSVs/Excel to GitHub)
+*.csv
+*.xlsx
+*.xls
+*.json
+*.sql.gz
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+
+# Python / Environment files (if you use Python or tools later)
+__pycache__/
+*.pyc
+.env
+venv/
+.venv/
