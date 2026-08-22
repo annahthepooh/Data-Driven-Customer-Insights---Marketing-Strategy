@@ -213,3 +213,26 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
+
+DROP TABLE geolocation_data;
+#To delete the geolocation dataset because the geolocation latitude and longitude have been distorted during import due to use of integer as datatype instead of decimal or float
+
+CREATE TABLE geolocation_dataset(
+geolocation_zip_code_prefix INT,
+geolocation_lat VARCHAR(50),
+geolocation_lng VARCHAR(50),
+geolocation_city TEXT,
+geolocation_state TEXT);
+
+SET SESSION sql_mode = '';
+
+SHOW VARIABLES LIKE 'local_infile';
+
+SET GLOBAL local_infile = 1;
+
+LOAD DATA LOCAL INFILE 'C:\\Users\\HP\\Downloads\\Ann Preparing For  DA interview\\Data-Driven-Customer-Insights-&-Marketing-Strategy\\Raw Data\\olist_geolocation_dataset.csv'
+INTO TABLE geolocation_dataset
+FIELDS TERMINATED BY ','
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;

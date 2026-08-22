@@ -47,4 +47,4 @@ SET customer_state = TRIM(customer_state);
 SELECT *
 FROM customers_dataset
 WHERE customer_state = '' OR customer_state IS NULL;
-#There are no miissing customer states
+#There are no missing customer states
