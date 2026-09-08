@@ -67,14 +67,3 @@ FROM SentimentCounts;
 # The proxy_nps_score is 34.84%
 
 
--- You would place this at the very end of your long RFM query, replacing your old final SELECT statement:
-SELECT
-    marketing_segment,
-    ROUND(AVG(review_score), 2) AS average_review_score,
-    COUNT(review_score) AS total_reviews_left,
-    -- Percentage of reviews in this segment that were bad (1 or 2 stars)
-    ROUND(SUM(CASE WHEN review_score <= 2 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS bad_review_pct
-FROM Segments S
-JOIN order_reviews_dataset R ON S.customer_unique_id = R.customer_id -- (Or your matching key)
-GROUP BY marketing_segment
-ORDER BY average_review_score ASC;

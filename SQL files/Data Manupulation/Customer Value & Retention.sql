@@ -106,9 +106,9 @@ ORDER BY Recency_Value DESC)
     
 SELECT 
 	customer_unique_id,
-    NTILE(5) OVER(PARTITION BY Recency_Value ORDER BY Recency_Value DESC) AS R_Code,
-    NTILE(5) OVER(PARTITION BY Frequency_Value ORDER BY Frequency_Value DESC) AS F_Code,
-    NTILE(5) OVER(PARTITION BY Monetary_Value ORDER BY Monetary_Value DESC) AS M_Code
+    NTILE(5) OVER(ORDER BY Recency_Value ASC) AS R_Code,
+    NTILE(5) OVER(ORDER BY Frequency_Value DESC) AS F_Code,
+    NTILE(5) OVER(ORDER BY Monetary_Value DESC) AS M_Code
 FROM RFM_Values
 ORDER BY
 	R_Code DESC,
@@ -144,9 +144,9 @@ ORDER BY Recency_Value DESC),
 RFM_Codes AS(
 SELECT
 	customer_unique_id,
-    NTILE(5) OVER(PARTITION BY Recency_Value ORDER BY Recency_Value DESC) AS R_Code,
-    NTILE(5) OVER(PARTITION BY Frequency_Value ORDER BY Frequency_Value DESC) AS F_Code,
-    NTILE(5) OVER(PARTITION BY Monetary_Value ORDER BY Monetary_Value DESC) AS M_Code
+    NTILE(5) OVER(ORDER BY Recency_Value ASC) AS R_Code,
+    NTILE(5) OVER(ORDER BY Frequency_Value DESC) AS F_Code,
+    NTILE(5) OVER(ORDER BY Monetary_Value DESC) AS M_Code
 FROM RFM_Values
 ORDER BY
 	R_Code DESC,
@@ -197,7 +197,7 @@ ORDER BY Recency_Value DESC),
 RFM_Codes AS(
 SELECT
 	customer_unique_id,
-    NTILE(5) OVER(ORDER BY Recency_Value DESC) AS R_Code,
+    NTILE(5) OVER(ORDER BY Recency_Value ASC) AS R_Code,
     NTILE(5) OVER(ORDER BY Frequency_Value DESC) AS F_Code,
     NTILE(5) OVER(ORDER BY Monetary_Value DESC) AS M_Code
 FROM RFM_Values),
