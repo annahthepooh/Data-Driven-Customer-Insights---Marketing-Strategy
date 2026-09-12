@@ -79,7 +79,7 @@ WITH seller_performance AS(
             
             END AS seller_performance_category
 	FROM seller_performance
-    ORDER BY total_orders DESC
+    ORDER BY total_revenue DESC
 ;
 # segment sellers into 4 categories based on the order volume vs the review score
 # The segments are : high volume poor review, high volume good review, low volume poor review and low volume good review
@@ -146,6 +146,7 @@ WHERE seller_performance_category = 'High Volume - Poor Reviews'
 ORDER BY total_revenue DESC;
 ;
 # There are 139 sellers with high volume of orders and poor reviews
+# ordered by total revenue instead because we want to see which sellers who generate the most revenue have bad reviews, this has more finacial benefit than ordering by total orders 
 
 
 
@@ -338,3 +339,73 @@ ORDER BY total_revenue DESC;
 ;
 # There are 580 sellers with low order volume and good review
 # That means that there is room for expansion through awareness campaign
+
+
+WITH seller_performance_data_2 AS(
+SELECT
+	COALESCE(PC.product_category_name_english, 'unknown') AS product_category,
+    OI.seller_id,
+    COUNT(DISTINCT OI.order_id) AS total_orders,
+    ROUND(SUM(OI.price),2) AS total_revenue,
+    ROUND(AVG(ORD.review_score),2) AS avg_review_score,
+    ROUND(
+    SUM(CASE WHEN ORD.review_score <=2 THEN 1 ELSE 0 END)/ 
+        NULLIF(COUNT(ORD.review_score),0)* 100, 2) AS bad_review_pct
+        
+FROM order_reviews_dataset ORD
+LEFT JOIN order_items_dataset OI
+	ON ORD.order_id = OI.order_id
+INNER JOIN products_dataset P
+	ON OI.product_id = P.product_id
+LEFT JOIN product_category_name_translation PC
+	ON P.product_category_name = PC.product_category_name
+
+GROUP BY PC.product_category_name_english,
+	OI.seller_id),
+
+seller_to_product AS(
+SELECT 
+	product_category,
+    seller_id,
+    total_orders,
+    total_revenue,
+    avg_review_score,
+    bad_review_pct,
+    CASE 
+			WHEN total_orders >=(
+				SELECT AVG(total_orders)
+                FROM seller_performance_data_2)
+			AND bad_review_pct >=(
+				SELECT AVG(bad_review_pct)
+                FROM seller_performance_data_2)
+			THEN 'High Volume - Poor reviews'
+            
+            WHEN total_orders >=(
+				SELECT AVG(total_orders)
+                FROM seller_performance_data_2)
+			AND bad_review_pct <(
+				SELECT AVG(bad_review_pct)
+                FROM seller_performance_data_2)
+			THEN 'High Volume - Good reviews'
+            
+            WHEN total_orders <(
+				SELECT AVG(total_orders)
+                FROM seller_performance_data_2)
+			AND bad_review_pct >=(
+				SELECT AVG(bad_review_pct)
+                FROM seller_performance_data_2)
+			THEN 'Low Volume - Poor Reviews'
+            
+            ELSE 'Low Volume - Good Reviews'
+            
+            END AS seller_performance_category
+    
+FROM seller_performance_data_2)
+
+SELECT 
+	seller_id,
+    product_category
+FROM seller_to_product
+WHERE seller_performance_category = 'High Volume - Poor Reviews'
+ORDER BY bad_review_pct DESC
+;
