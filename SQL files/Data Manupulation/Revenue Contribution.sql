@@ -5,10 +5,10 @@ WITH raw_data AS (
         C.customer_unique_id,
         O.order_id,
         O.order_purchase_timestamp,
-        COALESCE(OP.payment_value, 0) AS payment_value
+        COALESCE(OI.price, 0) AS price
     FROM customers_dataset C
     LEFT JOIN orders_dataset O ON C.customer_id = O.customer_id
-    LEFT JOIN order_payment_dataset OP ON O.order_id = OP.order_id
+    LEFT JOIN order_items_dataset OI ON O.order_id = OI.order_id
 ),
 
 RFM_values AS (
@@ -16,7 +16,7 @@ RFM_values AS (
         customer_unique_id,
         DATEDIFF('2018-12-31', DATE(MAX(order_purchase_timestamp))) AS Recency_Value,
         COUNT(DISTINCT order_id) AS Frequency_Value,
-        ROUND(SUM(payment_value), 2) AS Monetary_Value
+        ROUND(SUM(price), 2) AS Monetary_Value
     FROM raw_data
     GROUP BY customer_unique_id 
 ),
@@ -54,9 +54,9 @@ SELECT
 FROM Segments
 GROUP BY marketing_segment
 ORDER BY segment_revenue DESC;
-# Regular spontaneous customers contribute the most with 52.16%
-# Lost customers are second with 27.93%
-# Loyal customers come 3rd with 10.20%
-# Champions come next with 5.01%
-# About to sleep customers are next with 2.71%
-# The least amount of contribution comes from New buyers with 1.98%
+# Regular spontaneous customers contribute the most with 53.03%
+# Lost customers are second with 28.82%
+# Loyal customers come 3rd with 9.36%
+# Champions come next with 4.07%
+# About to sleep customers are next with 2.78%
+# The least amount of contribution comes from New buyers with 1.95%

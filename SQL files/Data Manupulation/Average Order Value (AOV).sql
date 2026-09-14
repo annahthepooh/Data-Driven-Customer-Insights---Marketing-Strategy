@@ -15,85 +15,87 @@
 SELECT * FROM brazil_ecommerce_dataset.order_payment_dataset;
 
 SELECT *
-FROM order_payment_dataset
-WHERE payment_value = 0;
+FROM order_items_dataset
+WHERE price = 0;
 
 SELECT *
 FROM orders_dataset O
-LEFT JOIN order_payment_dataset OP
-ON O.order_id = OP.order_id
-WHERE payment_value = 0 AND order_status = 'canceled';
+LEFT JOIN order_items_dataset OI
+ON O.order_id = OI.order_id
+WHERE price = 0 AND order_status = 'canceled';
 
 SELECT *
 FROM orders_dataset O
-LEFT JOIN order_payment_dataset OP
-ON O.order_id = OP.order_id
-WHERE payment_value = 0 AND order_status = 'delivered';
+LEFT JOIN order_items_dataset OI
+ON O.order_id = OI.order_id
+WHERE price = 0 AND order_status = 'delivered';
 
 SELECT *
 FROM orders_dataset O
-LEFT JOIN order_payment_dataset OP
-ON O.order_id = OP.order_id
-WHERE payment_value = 0 AND order_status = 'shipped';
+LEFT JOIN order_items_dataset OI
+ON O.order_id = OI.order_id
+WHERE price = 0 AND order_status = 'shipped';
 
 SELECT *
 FROM orders_dataset O
-LEFT JOIN order_payment_dataset OP
-ON O.order_id = OP.order_id
-WHERE payment_value = 0 AND order_status = 'processing';
+LEFT JOIN order_items_dataset OI
+ON O.order_id = OI.order_id
+WHERE price = 0 AND order_status = 'processing';
 
 SELECT *
 FROM orders_dataset O
-LEFT JOIN order_payment_dataset OP
-ON O.order_id = OP.order_id
-WHERE payment_value = 0 AND order_status = 'unavailable';
+LEFT JOIN order_items_dataset OI
+ON O.order_id = OI.order_id
+WHERE price = 0 AND order_status = 'unavailable';
 
 DELIMITER //
 CREATE PROCEDURE calculate_Applicable_AOV_without_0_value()
 	BEGIN
-		SELECT SUM(payment_value)/ COUNT(O.order_id) AS Average_Order_Value
+		SELECT SUM(price)/ COUNT(O.order_id) AS Average_Order_Value
         FROM orders_dataset O
-        LEFT JOIN order_payment_dataset OP
-		ON O.order_id = OP.order_id
+        LEFT JOIN order_items_dataset OI
+		ON O.order_id = OI.order_id
 		WHERE order_status != 'canceled'
-		AND (order_status != 'delivered' AND payment_value != 0)
-		AND (order_status != 'shipped' AND payment_value != 0)
-		AND (order_status != 'processing' AND payment_value !=0)
-		AND (order_status != 'unavailable' AND payment_value !=0);
+		AND (order_status != 'delivered' AND price != 0)
+		AND (order_status != 'shipped' AND price != 0)
+		AND (order_status != 'processing' AND price !=0)
+		AND (order_status != 'unavailable' AND price !=0);
 	END 
 // DELIMITER ;
 
 DROP PROCEDURE IF EXISTS calculate_Applicable_AOV_without_0_value;
 
 CALL calculate_Applicable_AOV_without_0_value;
-#The net AOV without the all 0 payment values is 211.0271
+#The net AOV without the all 0 payment values is 170.5884
 
 
 DELIMITER //
 CREATE PROCEDURE calculate_Applicable_AOV_with_0_value()
 	BEGIN
-		SELECT SUM(payment_value)/ COUNT(O.order_id) AS Average_Order_Value
+		SELECT SUM(price)/ COUNT(O.order_id) AS Average_Order_Value
 		FROM orders_dataset O
-        LEFT JOIN order_payment_dataset OP
-		ON O.order_id = OP.order_id;
+        LEFT JOIN order_items_dataset OI
+		ON O.order_id = OI.order_id;
 	END
 // DELIMITER ;
 
 DROP PROCEDURE IF EXISTS calculate_Applicable_AOV_with_0_value;
 
 CALL calculate_Applicable_AOV_with_0_value;
-# The AOV with gross revenue including the 0 payment_values is 154.1083
+# The AOV with gross revenue including the 0 payment_values is 119.8765
 
 DELIMITER //
 CREATE PROCEDURE calculate_Applicable_AOV_without_canceled_values()
 	BEGIN
-		SELECT SUM(payment_value)/ COUNT(O.order_id) AS Average_Order_Value
+		SELECT SUM(price)/ COUNT(O.order_id) AS Average_Order_Value
         FROM orders_dataset O
-        LEFT JOIN order_payment_dataset OP
-		ON O.order_id = OP.order_id
+        LEFT JOIN order_items_dataset OI
+		ON O.order_id = OI.order_id
 		WHERE order_status != 'canceled';
 	END 
 // DELIMITER ;
 
+DROP PROCEDURE IF EXISTS calculate_Applicable_AOV_without_canceled_values;
+
 CALL calculate_Applicable_AOV_without_canceled_values;
-#The AOV without canceled orders is 153.7118
+#The AOV without canceled orders is 119.7822

@@ -14,11 +14,11 @@ SELECT
 	customer_unique_id,
     order_purchase_timestamp,
     O.order_id,
-    payment_value,
+    COALESCE(OI.price,0) AS price,
     C.customer_id
-FROM order_payment_dataset OP
+FROM order_items_dataset OI
 RIGHT JOIN orders_dataset O 
-ON OP.order_id = O.order_id
+ON OI.order_id = O.order_id
 RIGHT JOIN customers_dataset C
 ON O.customer_id = C.customer_id)
 
@@ -26,7 +26,7 @@ SELECT
 	customer_unique_id,
     DATEDIFF('2018-12-31' , DATE(MAX(order_purchase_timestamp))) AS Recency_Value,
     COUNT(DISTINCT order_id) AS Frequency_Value,
-    ROUND(SUM(payment_value),2) AS Monetary_Value
+    ROUND(SUM(price),2) AS Monetary_Value
 FROM raw_data
 GROUP BY customer_unique_id
 ORDER BY Recency_Value ASC,
@@ -58,11 +58,11 @@ SELECT
 	customer_unique_id,
     order_purchase_timestamp,
     O.order_id,
-    COALESCE(OP.payment_value,0) AS payment_value,
+    COALESCE(OI.price,0) AS price,
     C.customer_id
-FROM order_payment_dataset OP
+FROM order_items_dataset OI
 RIGHT JOIN orders_dataset O 
-ON OP.order_id = O.order_id
+ON OI.order_id = O.order_id
 RIGHT JOIN customers_dataset C
 ON O.customer_id = C.customer_id)
 
@@ -70,7 +70,7 @@ SELECT
 	customer_unique_id,
     DATEDIFF('2018-12-31' , DATE(MAX(order_purchase_timestamp))) AS Recency_Value,
     COUNT(DISTINCT order_id) AS Frequency_Value,
-    ROUND(SUM(payment_value),2) AS Monetary_Value
+    ROUND(SUM(price),2) AS Monetary_Value
 FROM raw_data
 GROUP BY customer_unique_id
 ORDER BY Recency_Value DESC,
@@ -86,11 +86,11 @@ SELECT
 	customer_unique_id,
     order_purchase_timestamp,
     O.order_id,
-    COALESCE(OP.payment_value,0) AS payment_value,
+    COALESCE(OI.price,0) AS price,
     C.customer_id
-FROM order_payment_dataset OP
+FROM order_items_dataset OI
 RIGHT JOIN orders_dataset O 
-ON OP.order_id = O.order_id
+ON OI.order_id = O.order_id
 RIGHT JOIN customers_dataset C
 ON O.customer_id = C.customer_id),
 
@@ -99,7 +99,7 @@ SELECT
 	customer_unique_id,
     DATEDIFF('2018-12-31' , DATE(MAX(order_purchase_timestamp))) AS Recency_Value,
     COUNT(DISTINCT order_id) AS Frequency_Value,
-    ROUND(SUM(payment_value),2) AS Monetary_Value
+    ROUND(SUM(price),2) AS Monetary_Value
 FROM raw_data
 GROUP BY customer_unique_id
 ORDER BY Recency_Value DESC)
@@ -123,11 +123,11 @@ SELECT
 	customer_unique_id,
     order_purchase_timestamp,
     O.order_id,
-    COALESCE(OP.payment_value,0) AS payment_value,
+    COALESCE(OI.price,0) AS price,
     C.customer_id
-FROM order_payment_dataset OP
+FROM order_items_dataset OI
 RIGHT JOIN orders_dataset O 
-ON OP.order_id = O.order_id
+ON OI.order_id = O.order_id
 RIGHT JOIN customers_dataset C
 ON O.customer_id = C.customer_id),
 
@@ -136,7 +136,7 @@ SELECT
 	customer_unique_id,
     DATEDIFF('2018-12-31' , DATE(MAX(order_purchase_timestamp))) AS Recency_Value,
     COUNT(DISTINCT order_id) AS Frequency_Value,
-    ROUND(SUM(payment_value),2) AS Monetary_Value
+    ROUND(SUM(price),2) AS Monetary_Value
 FROM raw_data
 GROUP BY customer_unique_id
 ORDER BY Recency_Value DESC),
@@ -176,11 +176,11 @@ SELECT
 	customer_unique_id,
     order_purchase_timestamp,
     O.order_id,
-    COALESCE(OP.payment_value,0) AS payment_value,
+    COALESCE(OI.price,0) AS price,
     C.customer_id
-FROM order_payment_dataset OP
+FROM order_items_dataset OI
 RIGHT JOIN orders_dataset O 
-ON OP.order_id = O.order_id
+ON OI.order_id = O.order_id
 RIGHT JOIN customers_dataset C
 ON O.customer_id = C.customer_id),
 
@@ -189,7 +189,7 @@ SELECT
 	customer_unique_id,
     DATEDIFF('2018-12-31' , DATE(MAX(order_purchase_timestamp))) AS Recency_Value,
     COUNT(DISTINCT order_id) AS Frequency_Value,
-    ROUND(SUM(payment_value),2) AS Monetary_Value
+    ROUND(SUM(price),2) AS Monetary_Value
 FROM raw_data
 GROUP BY customer_unique_id
 ORDER BY Recency_Value DESC),
@@ -228,11 +228,11 @@ SELECT
 	SUM(IF (marketing_segment = 'Lost',1,0)) AS lost_count,
     SUM(IF (marketing_segment = 'Regular spontaneous customer',1,0)) AS regular_count
 FROM Segments;
-# Regular spontaneous customers are the highest with 45,820
-# Loyal customers are 2nd with 19,042
-# 3rd on the list are the champions who are 14,402
+# Regular spontaneous customers are the highest with 46,131
+# Loyal customers are 2nd with 18,842
+# 3rd on the list are the champions who are 14,440
 # 4th are the lost customers who are 14,386
-# 5th are the customers who are about to sleep customers who are 1,389
+# 5th are the customers who are about to sleep customers who are 1,360
 # 6th are the new buyers with 1057
 # There are no cannot lose customers
 
@@ -243,11 +243,11 @@ SELECT
 	customer_unique_id,
     order_purchase_timestamp,
     O.order_id,
-    COALESCE(OP.payment_value,0) AS payment_value,
+    COALESCE(OI.price,0) AS price,
     C.customer_id
-FROM order_payment_dataset OP
+FROM order_items_dataset OI
 RIGHT JOIN orders_dataset O 
-ON OP.order_id = O.order_id
+ON OI.order_id = O.order_id
 RIGHT JOIN customers_dataset C
 ON O.customer_id = C.customer_id),
 
@@ -256,7 +256,7 @@ SELECT
 	customer_unique_id,
     DATEDIFF('2018-12-31' , DATE(MAX(order_purchase_timestamp))) AS Recency_Value,
     COUNT(DISTINCT order_id) AS Frequency_Value,
-    ROUND(SUM(payment_value),2) AS Monetary_Value
+    ROUND(SUM(price),2) AS Monetary_Value
 FROM raw_data
 GROUP BY customer_unique_id
 ORDER BY Recency_Value DESC),
@@ -303,11 +303,11 @@ SELECT
 	ROUND(SUM(IF (marketing_segment = 'Lost',1,0)) / COUNT(*)*100,2) AS per_lost_count,
     ROUND(SUM(IF (marketing_segment = 'Regular spontaneous customer',1,0)) / COUNT(*)*100,2) AS per_regular
 FROM Segments;
-# 47.68% of the customers are regular spontaneuous customers which make up almost half the customer base
-# 19.82% are the loyal customers and the gap between them and the first group is massive
-# 14.99% are champions and the gap between the second group is not big
-# 14.97% are the lost customers and the gap is insignificant 
-# 1.45% of the customers are about to sleep 
+# 48.01% of the customers are regular spontaneuous customers which make up almost half the customer base
+# 19.61% are the loyal customers and the gap between them and the first group is massive
+# 15.03% are champions and the gap between the second group is not big
+# 14.85% are the lost customers and the gap is insignificant 
+# 1.42% of the customers are about to sleep 
 # 1.10% of the customers are new buyers
 # There are no customers who have been loyal and spending buut not bought recently that we don't want to lose
 
@@ -320,11 +320,11 @@ WITH raw_data AS(
 		customer_unique_id,
 		order_purchase_timestamp,
 		O.order_id,
-		COALESCE(OP.payment_value,0) AS payment_value,
+		COALESCE(OI.price,0) AS price,
 		C.customer_id
-	FROM order_payment_dataset OP
+	FROM order_items_dataset OI
 	RIGHT JOIN orders_dataset O 
-	ON OP.order_id = O.order_id
+	ON OI.order_id = O.order_id
 	RIGHT JOIN customers_dataset C
 	ON O.customer_id = C.customer_id),
 
@@ -333,7 +333,7 @@ RFM_values AS(
 		customer_unique_id,
 		COUNT(DISTINCT order_id) AS Frequency_Value,
 		DATEDIFF('2018-12-31', DATE(MAX(order_purchase_timestamp))) AS Recency_Value,
-		ROUND(SUM(payment_value),2) AS Monetary_Value
+		ROUND(SUM(price),2) AS Monetary_Value
 	FROM raw_data
     GROUP BY customer_unique_id),
     
@@ -378,8 +378,9 @@ FROM order_segments OS
 JOIN order_reviews_dataset ORD ON OS.order_id = ORD.order_id
 GROUP BY OS.marketing_segment
 ORDER BY average_review_score ASC;
-# About to sleep customers gave the most bad reviews at 24.63%
-# lost customers were next with 15.17%
-# loyal customers 14.80% and regular spontaneaous customers were next 14.81%
+# About to sleep customers gave the most bad reviews at 24.22%
+# lost customers were next with 14.49%
+# loyal customers 14.80% and regular spontaneaous customers were next 14.69%
+# Regular spontaneous customers were next with 14.67%
 # New buyers were next with 13.59%
 # Champions gave the least amount of bad review points at 12.37%
