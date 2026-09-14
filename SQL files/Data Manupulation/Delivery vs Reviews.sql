@@ -61,5 +61,4 @@ SELECT
     END AS delivery_vs_review_segments
 FROM calculated_date c
 CROSS JOIN global_averages g
-WHERE c.date_diff > 0
 ORDER BY c.date_diff DESC;

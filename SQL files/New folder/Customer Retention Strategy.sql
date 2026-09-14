@@ -257,5 +257,127 @@ ORDER BY one_time_customers DESC;
 # Sports leisure follows with 7106
 # computer accessories is next with 6272
 # furniture decor is next with 5852
+
+
+
+
+
+
+WITH product_performance_data_2 AS(
+SELECT
+	COALESCE(PC.product_category_name_english, 'unknown') AS product_category,
+    OI.seller_id,
+    COUNT(DISTINCT OI.order_id) AS total_orders,
+    ROUND(SUM(OI.price),2) AS total_revenue,
+    ROUND(AVG(ORD.review_score),2) AS avg_review_score,
+    ROUND(
+    SUM(CASE WHEN ORD.review_score <=2 THEN 1 ELSE 0 END)/ 
+        NULLIF(COUNT(ORD.review_score),0)* 100, 2) AS bad_review_pct
+        
+FROM order_reviews_dataset ORD
+LEFT JOIN order_items_dataset OI
+	ON ORD.order_id = OI.order_id
+    
+INNER JOIN products_dataset P
+	ON OI.product_id = P.product_id
+    
+LEFT JOIN product_category_name_translation PC
+	ON P.product_category_name = PC.product_category_name
+
+GROUP BY PC.product_category_name_english,
+	OI.seller_id),
+
+product_to_seller AS(
+SELECT 
+	product_category,
+    seller_id,
+    total_orders,
+    total_revenue,
+    avg_review_score,
+    bad_review_pct,
+    CASE 
+			WHEN total_orders >=(
+				SELECT AVG(total_orders)
+                FROM product_performance_data_2)
+			AND bad_review_pct >=(
+				SELECT AVG(bad_review_pct)
+                FROM product_performance_data_2)
+			THEN 'High Volume - Poor Reviews'
+            
+            WHEN total_orders >=(
+				SELECT AVG(total_orders)
+                FROM product_performance_data_2)
+			AND bad_review_pct <(
+				SELECT AVG(bad_review_pct)
+                FROM product_performance_data_2)
+			THEN 'High Volume - Good reviews'
+            
+            WHEN total_orders <(
+				SELECT AVG(total_orders)
+                FROM product_performance_data_2)
+			AND bad_review_pct >=(
+				SELECT AVG(bad_review_pct)
+                FROM product_performance_data_2)
+			THEN 'Low Volume - Poor Reviews'
+            
+            ELSE 'Low Volume - Good Reviews'
+            
+            END AS product_performance_category
+    
+FROM product_performance_data_2
+),
+
+seller_customer_orders AS(
+	SELECT
+		OI.seller_id,
+		C.customer_unique_id,
+		COUNT(DISTINCT O.order_id) AS customer_orders_with_seller,
+        COUNT(DISTINCT O.order_id) AS order_count
+        
+	FROM order_items_dataset OI
+    INNER JOIN orders_dataset O
+		ON OI.order_id = O.order_id
+    INNER JOIN customers_dataset C
+		ON O.customer_id = C.customer_id
+        
+	GROUP BY OI.seller_id,
+		C.customer_unique_id),
+
+seller_to_customer_summary AS(
+	SELECT
+		seller_id,
+        COUNT(DISTINCT customer_unique_id) AS total_customers,
+        COUNT(DISTINCT CASE
+			WHEN order_count > 1 THEN customer_unique_id 
+            END) AS repeat_customers
+            
+	FROM seller_customer_orders
+    GROUP BY seller_id)
+    
+
+SELECT 
+    PTS.product_category,
+    PTS.seller_id,
+    PTS.total_orders,
+    PTS.total_revenue,
+    PTS.avg_review_score,
+    PTS.bad_review_pct,
+    PTS.product_performance_category,
+    SCS.total_customers,
+    SCS.repeat_customers,
+    ROUND(SCS.repeat_customers
+        / NULLIF(SCS.total_customers, 0) * 100,
+        2
+    ) AS repeat_customer_pct
     
     
+FROM product_to_seller PTS
+INNER JOIN seller_to_customer_summary SCS
+	ON PTS.seller_id = SCS.seller_id
+    
+WHERE PTS.product_performance_category = 'High Volume - Poor Reviews'
+    
+ORDER BY repeat_customer_pct DESC,
+	PTS.bad_review_pct DESC;
+;
+# There are 348 sellers with high volume of orders and poor reviews but still have repeat customers
