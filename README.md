@@ -55,7 +55,7 @@ The dataset includes multiple tables covering :
 
 The data was imported into MySQL, cleaned, transformed, analyzed and then connected to Power BI for visualization.
 
-## Tools & technologieS
+## Tools & technology
 
   1. MySQL - Data Cleaning, Transformation & Analysis
   2. SQL - Business Analysis & Customer Segmentation
