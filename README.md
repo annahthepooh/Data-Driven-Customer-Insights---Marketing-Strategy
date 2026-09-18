@@ -6,17 +6,20 @@
 
 ## Project Overview
 
-This project analyzes customer, seller, product, order, payment, delivery and review data of an Brazillian Olist E-cormmerce Marketplace to identify opportunities on customer retention, customer experience improvement and targeted growth. 
+This project analyzes customer and commercial performance within the Brazilian Olist e-commerce marketplace to identify opportunities for customer retention, customer experience improvement and targeted growth.
 
-Using MySQL and Power BI, I transformed raw e-commerce data into actionable customer and commercial insights then came up with strategies based on the uncovered business problems.
+Using MySQL and Power BI, I analyzed customer behavior, product and seller performance, delivery performance, reviews and purchasing patterns. 
 
-This project combines data analysis and digital marketing strategy to answer not only what the issue is but also what business can do about it.
+The analysis was then translated into data-driven marketing strategies designed to answer a key business question:
+
+How can an e-commerce business use customer and sales data to improve retention, customer experience and revenue growth?
 
 
 ## Business Problem
 
-Olist generates a significant number of sales and order volume but the analysis reveals a major customer challenge.
-The business need to understand:
+Although Olist generated approximately $14M in revenue from 99K orders, the analysis identified a significant customer retention opportunity.
+
+The business needed to understand:
 
 Which customers are most valuable and which are at risk of being inactive?
 Which product categories generate the most orders and revenue?
@@ -35,7 +38,7 @@ The main objectives of this project were to:
 4. Identify customer experience problems using delivery and review data.
 5. Identify sellers with opportunities with customer retention.
 6. Translate analytical findings into practical marketing strategies.
-7. Build an interactive Power BI dashboard for business decision making. 
+7. Build an interactive Power BI dashboard to communicate the findings. 
 
 
 ## Dataset
@@ -70,14 +73,16 @@ The raw Olist data required preparation before analysis.
 Key data preparation activities included:
 
  1. Importing datasets into MySQL.
- 2. Handling missing values.
- 3. Using appropriate JOINS across the different tables
- 4. Standardizing product category information
- 5. Handling NULL prices & other missing values
- 6. Creating calculated fields for delivery performance
- 7. Calculating customer level RFM metrics
- 8. Creating seller & product performance classifications
- 9. Preparing analytical datasets for Power BI
+ 2. Cleaning & transforming the raw datasets.
+ 3. Handling missing values.
+ 4. Using appropriate JOINS across the different tables.
+ 5. Standardizing product category information.
+ 5. Handling NULL prices.
+ 6. Creating calculated fields for delivery performance.
+ 7. Calculating customer level RFM metrics.
+ 8. Creating seller & product performance classifications.
+ 9. Preparing analytical datasets for Power BI.
+
 
 The cleaned data was then used to conduct business analysis.
 
@@ -116,21 +121,21 @@ The analysis was structured around 4 major business areas:
       - Order Volume
       - Delivery Performance
       - Average Review Score
-      - Percentage of poor reviews
+      - Bad reviews percentage
 
-     Sellers were classified based on combinations of revenue, delivery performance & customer reviews to identify areas requiring intervention or growth.
+     Sellers were classified based on combinations of revenue, delivery performance & customer reviews.
     
   3. ### Customer & marketing Opportunities
 
       The Analysis was used to identify:
        - High value customers requiring retention
-       - Customers requiring reactivation
+       - Inactive customers requiring reactivation
        - High Revenue Sellers with one-time customers
        - Sellers with delivery & review problems
        - Products and sellers with strong customer experience and low sales volume
     
   ## Key Findings
-  ### Slow Sales Volume but Low Customer Repeat Rate
+  ### High Sales Volume but Low Customer Repeat Rate
   
   The market rate genarated approximately:
 ####KPI	####Result
@@ -351,7 +356,9 @@ Campaigns should be evaluated using metrics such as:
    
 ## Skills Demonstrated
 ### Data Analysis
+ - MySQL
  - SQL
+ - Data Analytics
  - Data cleaning
  - Data transformation
  - Exploratory data analysis
@@ -377,6 +384,7 @@ Campaigns should be evaluated using metrics such as:
   - Interactive visualizations
   - Business storytelling
   - Business Thinking
+
     
 
 ## Dashboard Preview
