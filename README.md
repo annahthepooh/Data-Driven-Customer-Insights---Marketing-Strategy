@@ -383,17 +383,8 @@ Campaigns should be evaluated using metrics such as:
 
 Power BI dashboard :
 <p align="center">
-  <img src="./Assets/Executive Overview.png" alt="" width="100%">
-</p>
-
-<p align="center">
-  <img src="./Assets/Customer & Retention.png" alt="" width="100%">
-</p>
-
-<p align="center">
-  <img src="./Assets/Seller & Customer Experience .png" alt="" width="100%">
-</p>
-
-<p align="center">
-  <img src="./Assets/Marketing Strategy.png" alt="" width="100%">
+  <img src="./Assets/Executive Overview.png" alt="" width="24%">
+  <img src="./Assets/Customer & Retention.png" alt="" width="24%">
+  <img src="./Assets/Seller & Customer Experience .png" alt="" width="24%">
+  <img src="./Assets/Marketing Strategy.png" alt="" width="24%">
 </p>
